@@ -29,7 +29,7 @@ class Interface extends Logs {
 
     let object = {
       id_activity: this.id_activity,
-      timestamp: this.timestamp == null ? dateTimestamp : this.timestamp,
+      timestamp: null,
       user_id: this.user_id,
       access_token: this.access_token,
       request_payload: this.request_payload,
