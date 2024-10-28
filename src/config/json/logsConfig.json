@@ -1,0 +1,11 @@
+{
+    "interface_logs": {
+        "endpoint": "interface"
+    },
+    "system_logs": {
+        "endpoint": "systems"
+    },
+    "session_logs": {
+        "endpoint": "session"
+    }
+}

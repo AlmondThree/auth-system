@@ -19,12 +19,13 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
-// // Middleware
-// const { authenticationAPIKey } = require('./src/middleware/authService')
+// Middleware
+const { authenticationAPIKey } = require('./src/middleware/authService')
+const { responseHandler } = require('./src/middleware/responseHandler')
 
-// // Router
-// const router_v1 = require('./src/router/v1/routes')
-// app.use('/api/logs/v1', authenticationAPIKey, router_v1)
+// Router
+const router_v1 = require('./src/router/v1/mainRoutes')
+app.use('/api/auth/v1', authenticationAPIKey, router_v1, responseHandler)
 
 // App General
 

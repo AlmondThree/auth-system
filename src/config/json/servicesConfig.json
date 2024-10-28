@@ -1,0 +1,10 @@
+{
+    "register_user": {
+        "parameter": [],
+        "mandatory_parameter": ["username", "password", "roles", "first_name", "last_name", "email", "employee_id"]
+    },
+    "login_user": {
+        "parameter": ["username", "password"],
+        "mandatory_parameter": ["username", "password"]
+    }
+}
