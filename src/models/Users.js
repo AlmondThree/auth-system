@@ -95,6 +95,15 @@ class Users {
 
   }
 
+  async getRoleByUserId(userId) {
+    let query = {
+      text: "select role_name from user_role UR join role_mapping RM on UR.id_role = RM.id_role where RM.user_id = $1",
+      values: [userId]
+    }
+
+    return await callDatabase(query);
+  }
+
 }
 
 module.exports = Users;
