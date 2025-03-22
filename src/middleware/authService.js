@@ -1,7 +1,9 @@
+const envVar = require("../utils/general/getEnvironmentVariable");
+
 const authenticationAPIKey = (req, res, next) => {
   let authHeader = req.header("x-api-key");
 
-  if (authHeader == "snwadb2o4n89jnsgqlzpk3pmb4pg") {
+  if (authHeader == envVar.getValueDotENV("API_KEY")) {
     res.locals.reqTimeStart = new Date();
     next();
   } else {
