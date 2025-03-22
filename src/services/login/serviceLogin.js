@@ -4,6 +4,7 @@ const {
   validateReqPayload,
 } = require("../../utils/general/validateReqPayload");
 const bcrypt = require("bcrypt");
+const {createJWT} = require('../../utils/general/createJWT')
 
 const loginUser = async (req, res) => {
   let reqBody = req.body;
@@ -11,6 +12,7 @@ const loginUser = async (req, res) => {
   let response = {
     status: "",
     message: "",
+    token: "",
   };
 
   const statusReqBody = validateReqPayload(
@@ -31,8 +33,23 @@ const loginUser = async (req, res) => {
       statusRequest = await bcrypt.compare(passwordReq, storedPassword);
 
       if(statusRequest) {
+
+        let roles = await usersImpl.getRoleByUserId(dataUser.rows[0]["user_id"])
+
+        let dataToken = {
+          user_id: dataUser.rows[0]["user_id"],
+          username: dataUser.rows[0]["username"],
+          first_name: dataUser.rows[0]["first_name"],
+          last_name: dataUser.rows[0]["last_name"],
+          employee_id: dataUser.rows[0]["employee_id"],
+          roles: roles.rows[0]["role_name"],
+        }
+
+        const token = await createJWT(dataToken)
+
         response.status = "success";
         response.message = "Login Successful!";
+        response.token = token
       } else {
         response.status = "error";
         response.message = "Invalid credentials!";

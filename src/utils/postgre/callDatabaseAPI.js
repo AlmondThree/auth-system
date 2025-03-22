@@ -1,21 +1,19 @@
-const { Pool } = require('pg')
-
-const dbConfig = require('../../config/js/databaseConnection')
+const { poolConnection } = require('./poolConnection.js')
 
 const callDatabase = async (paramQuery) => {
 
     try {
-        const dbAttribute = dbConfig.dbConnection()
+        const poolDb = await poolConnection();
 
-        const poolDb = new Pool(dbAttribute)
+        const connectionInstance = await poolDb.getInstance();
 
-        const response = await poolDb.query(paramQuery)
+        const client = await connectionInstance.connect();
 
-        poolDb.end()
+        const response = await client.query(paramQuery)
         
         return response
     } catch (e) {
-        return e.stack;
+        return console.log(e.stack);
     }
 }
 
