@@ -64,6 +64,7 @@ const loginUser = async (req, res) => {
       response.message = "Data not found!";
     }
 
+    req.body.password = "***";
     res.locals.status = statusRequest ? 200 : 401;
     res.locals.payload = response;
   } else {
