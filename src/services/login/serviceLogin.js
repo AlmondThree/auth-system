@@ -4,7 +4,7 @@ const {
   validateReqPayload,
 } = require("../../utils/general/validateReqPayload");
 const bcrypt = require("bcrypt");
-const {createJWT} = require('../../utils/general/createJWT')
+const {createJWT, createRefreshToken} = require('../../utils/general/createJWT')
 
 const loginUser = async (req, res) => {
   let reqBody = req.body;
@@ -13,6 +13,7 @@ const loginUser = async (req, res) => {
     status: "",
     message: "",
     token: "",
+    refresh_token: "",
   };
 
   const statusReqBody = validateReqPayload(
@@ -45,11 +46,13 @@ const loginUser = async (req, res) => {
           roles: roles.rows[0]["role_name"],
         }
 
-        const token = await createJWT(dataToken)
+        const token = createJWT(dataToken);
+        const refreshToken = createRefreshToken(dataToken);
 
         response.status = "success";
         response.message = "Login Successful!";
-        response.token = token
+        response.token = token;
+        response.refresh_token = refreshToken;
       } else {
         response.status = "error";
         response.message = "Invalid credentials!";

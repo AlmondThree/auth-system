@@ -26,4 +26,16 @@ const createJWT = (data) => {
     return token;
 }
 
-module.exports = { createJWT };
+const createRefreshToken = (data) => {
+    const token = jwt.sign(
+        {user_id: data.user_id},
+        `${data.user_id}&`,
+        {
+            expiresIn: '7d'
+        }
+    )
+
+    return token
+}
+
+module.exports = { createJWT, createRefreshToken };
