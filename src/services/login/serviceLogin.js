@@ -35,7 +35,11 @@ const loginUser = async (req, res) => {
 
       if(statusRequest) {
 
-        let roles = await usersImpl.getRoleByUserId(dataUser.rows[0]["user_id"])
+        let roleData = await usersImpl.getRoleByUserId(dataUser.rows[0]["user_id"]);
+
+        let roles = [];
+
+        for(i = 0 ; i < roleData.rowCount; i++) { roles[i] = roleData.rows[i]["role_name"] }
 
         let dataToken = {
           user_id: dataUser.rows[0]["user_id"],
@@ -43,7 +47,7 @@ const loginUser = async (req, res) => {
           first_name: dataUser.rows[0]["first_name"],
           last_name: dataUser.rows[0]["last_name"],
           employee_id: dataUser.rows[0]["employee_id"],
-          roles: roles.rows[0]["role_name"],
+          roles: roles,
         }
 
         const token = createJWT(dataToken);
