@@ -6,5 +6,9 @@
     "login_user": {
         "parameter": ["username", "password"],
         "mandatory_parameter": ["username", "password"]
+    },
+    "authorize_token": {
+        "parameter": ["token", "id_activity", "next_link"],
+        "mandatory_parameter": ["token", "id_activity"]
     }
 }
