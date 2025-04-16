@@ -29,8 +29,9 @@ app.use('/api/auth/v1', authenticationAPIKey, router_v1, responseHandler)
 
 // App General
 
-app.get('/', (req, res) => {
-    res.send('hello world')
+app.all('/*', (req, res) => {
+    res.status(404)
+    res.send('not found')
 })
 
 app.listen(port, () => {
