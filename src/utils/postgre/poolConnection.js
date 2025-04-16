@@ -2,6 +2,8 @@ const { Pool } = require('pg')
 
 const dbConfig = require('../../config/js/databaseConnection')
 
+var instance;
+
 const poolConnection = async () => {
     function createPool() {
         const dbAttribute = dbConfig.dbConnection()
@@ -10,8 +12,6 @@ const poolConnection = async () => {
 
         return poolDb
     }
-
-    var instance;
 
     return {
         getInstance : function () {

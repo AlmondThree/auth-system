@@ -3,9 +3,8 @@ const { poolConnection } = require('./poolConnection.js')
 const callDatabase = async (paramQuery) => {
 
     try {
-        const poolDb = await poolConnection();
 
-        const connectionInstance = await poolDb.getInstance();
+        const connectionInstance = (await poolConnection()).getInstance();
 
         const client = await connectionInstance.connect();
 
