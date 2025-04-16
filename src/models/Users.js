@@ -104,6 +104,14 @@ class Users {
     return await callDatabase(query);
   }
 
+  async getRolesList() {
+    let query = {
+      text: "select role_name, description from user_role ur"
+    }
+
+    return await callDatabase(query);
+  }
+
 }
 
 module.exports = Users;
