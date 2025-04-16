@@ -9,6 +9,8 @@ const callDatabase = async (paramQuery) => {
         const client = await connectionInstance.connect();
 
         const response = await client.query(paramQuery)
+
+        await client.release();
         
         return response
     } catch (e) {
