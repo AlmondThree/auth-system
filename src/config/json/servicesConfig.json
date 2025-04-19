@@ -10,5 +10,9 @@
     "authorize_token": {
         "parameter": ["token", "id_activity", "next_link"],
         "mandatory_parameter": ["token", "id_activity"]
+    },
+    "refresh_token": {
+        "parameter": ["token", "user_id"],
+        "mandatory_parameter": ["token", "user_id"]
     }
 }

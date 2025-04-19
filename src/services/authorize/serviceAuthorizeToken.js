@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const { getDataById } = require("../../utils/mongodb/getDataDocs");
 
-const sericeAuthorizeToken = async (req, res) => {
+const serviceAuthorizeToken = async (req, res) => {
   let reqBody = req.body;
 
   const serviceObj = new Services();
@@ -135,4 +135,4 @@ const sericeAuthorizeToken = async (req, res) => {
   );
 };
 
-module.exports = { sericeAuthorizeToken };
+module.exports = { serviceAuthorizeToken };
