@@ -14,7 +14,12 @@ const callDatabase = async (paramQuery) => {
         
         return response
     } catch (e) {
-        return console.log(e.stack);
+        return (
+            {
+                status: "error",
+                message: `Call Database: ${e.toString()}`,
+            }
+        )
     }
 }
 

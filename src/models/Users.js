@@ -95,6 +95,23 @@ class Users {
 
   }
 
+  async getDataByUserId(userId) {
+    let query = {
+      text: "select user_id, username, first_name, last_name, email, employee_id, password from users where user_id = $1 fetch first 1 rows only",
+      values: [userId]
+    }
+
+    const dataDb = await callDatabase(query);
+
+    return {
+      status: (dataDb.status) ? dataDb.status : true,
+      message: (dataDb.message) ? dataDb.message : null,
+      rowCount: dataDb.rowCount,
+      data: dataDb.rows,
+    }
+
+  }
+
   async getRoleByUserId(userId) {
     let query = {
       text: "select role_name from user_role UR join role_mapping RM on UR.id_role = RM.id_role where RM.user_id = $1",
