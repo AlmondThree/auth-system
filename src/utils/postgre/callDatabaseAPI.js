@@ -8,15 +8,22 @@ const callDatabase = async (paramQuery) => {
 
         const client = await connectionInstance.connect();
 
-        const response = await client.query(paramQuery)
+        const responseDB = await client.query(paramQuery)
 
         await client.release();
         
-        return response
+        return (
+            {
+                is_success: true,
+                message: "query successful",
+                rowCount: responseDB.rowCount,
+                data: responseDB.rows,
+            }
+        )
     } catch (e) {
         return (
             {
-                status: "error",
+                is_success: false,
                 message: `Call Database: ${e.toString()}`,
             }
         )

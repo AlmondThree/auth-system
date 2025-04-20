@@ -67,17 +67,26 @@ class Users {
 
       const resultRaw = await callDatabase(query);
 
-      let result = resultRaw.rows[0].insert_users;
+      let finalResult;
 
-      result = result.substr(1, result.length - 2);
+      if (resultRaw.is_success) {
+        let result = resultRaw.data[0].insert_users;
 
-      let resultSplit = result.split(",");
+        result = result.substr(1, result.length - 2);
 
-      const finalResult = {
-        status: resultSplit[0] == "t" ? true : false,
-        message: resultSplit[1],
-        id: resultSplit[2],
-      };
+        let resultSplit = result.split(",");
+
+        finalResult = {
+          status: resultSplit[0] == "t" ? true : false,
+          message: resultSplit[1],
+          id: resultSplit[2],
+        };
+      } else {
+        finalResult = {
+          status: "error",
+          message: resultRaw.message,
+        };
+      }
 
       return finalResult;
     }
@@ -86,49 +95,64 @@ class Users {
   async getDataByUsername(username) {
     let query = {
       text: "select user_id, username, first_name, last_name, email, employee_id, password from users where username = $1 fetch first 1 rows only",
-      values: [username]
-    }
+      values: [username],
+    };
 
-    const result = await callDatabase(query);
+    const responseDB = await callDatabase(query);
 
-    return result
-
+    return {
+      status: responseDB.is_success ? responseDB.is_success : true,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
   }
 
   async getDataByUserId(userId) {
     let query = {
       text: "select user_id, username, first_name, last_name, email, employee_id, password from users where user_id = $1 fetch first 1 rows only",
-      values: [userId]
-    }
+      values: [userId],
+    };
 
-    const dataDb = await callDatabase(query);
+    const responseDB = await callDatabase(query);
 
     return {
-      status: (dataDb.status) ? dataDb.status : true,
-      message: (dataDb.message) ? dataDb.message : null,
-      rowCount: dataDb.rowCount,
-      data: dataDb.rows,
-    }
-
+      status: responseDB.is_success ? responseDB.is_success : true,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
   }
 
   async getRoleByUserId(userId) {
     let query = {
       text: "select role_name from user_role UR join role_mapping RM on UR.id_role = RM.id_role where RM.user_id = $1",
-      values: [userId]
-    }
+      values: [userId],
+    };
+    const responseDB = await callDatabase(query);
 
-    return await callDatabase(query);
+    return {
+      status: responseDB.is_success ? responseDB.is_success : true,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
   }
 
   async getRolesList() {
     let query = {
-      text: "select role_name, description from user_role ur"
-    }
+      text: "select role_name, description from user_role ur",
+    };
 
-    return await callDatabase(query);
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ? responseDB.is_success : true,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
   }
-
 }
 
 module.exports = Users;
