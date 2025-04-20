@@ -4,7 +4,10 @@ const authenticationAPIKey = (req, res, next) => {
   let authHeader = req.header("x-api-key");
 
   if (authHeader == envVar.getValueDotENV("API_KEY")) {
-    res.locals.reqTimeStart = new Date();
+    //res.time.reqTimeStart = new Date();
+    res.time = {
+      reqTime: new Date()
+    };
     next();
   } else {
     res.status(401);

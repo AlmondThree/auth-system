@@ -25,7 +25,6 @@ class Interface extends Logs {
   }
 
   getObj() {
-    const dateTimestamp = new Date();
 
     let object = {
       id_activity: this.id_activity,

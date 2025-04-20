@@ -5,7 +5,7 @@ const responseHandler = (req, res, next) => {
 
     const idActivity = req.header("x-activity-id")
     
-    const reqDuration =  dateNow - res.locals.reqTimeStart
+    const reqDuration =  dateNow - res.time.reqTime
 
     //Interface Log Section
     const InterfaceImpl = new Interface();
@@ -17,7 +17,7 @@ const responseHandler = (req, res, next) => {
         req.body,
         (res.locals.status == 500) ? res.locals.errorMessage.toString() : res.locals.payload,
         reqDuration,
-        res.locals.reqTimeStart,
+        res.time.reqTime,
         dateNow
     )
     InterfaceImpl.sendLogs("interface_logs");
