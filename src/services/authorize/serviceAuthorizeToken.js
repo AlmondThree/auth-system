@@ -59,6 +59,12 @@ const serviceAuthorizeToken = async (req, res) => {
             };
 
             dataActivityById = false;
+          } else {
+            statusCode = 500;
+            errorMessage = `Call MongoDB: ${error.toString()}`;
+            responsePayload = {
+              message: `Error get data roles from database: ${error.toString()}`,
+            };
           }
         }
 

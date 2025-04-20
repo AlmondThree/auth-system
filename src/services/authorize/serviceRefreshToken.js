@@ -32,7 +32,7 @@ const serviceRefreshToken = async (req, res) => {
       if (isSuccess) {
         let dataUser = await usersImpl.getDataByUserId(reqBody.user_id);
 
-        if (dataUser.rowCount > 0 && dataUser.status != "error") {
+        if (dataUser.rowCount > 0 && dataUser.status) {
           if (statusRequest) {
             let roleData = await usersImpl.getRoleByUserId(
               dataUser.data[0]["user_id"]
@@ -41,7 +41,7 @@ const serviceRefreshToken = async (req, res) => {
             let roles = [];
 
             for (i = 0; i < roleData.rowCount; i++) {
-              roles[i] = roleData.rows[i]["role_name"];
+              roles[i] = roleData.data[i]["role_name"];
             }
 
             let dataToken = {
@@ -76,7 +76,7 @@ const serviceRefreshToken = async (req, res) => {
               null
             );
           }
-        } else if (dataUser.status == "error") {
+        } else if (dataUser.status == false) {
           serviceObj.setResponseObj(
             500,
             {
