@@ -29,24 +29,24 @@ const loginUser = async (req, res) => {
     let dataUser = await usersImpl.getDataByUsername(usernameReq);
 
     if (dataUser.rowCount > 0) {
-      let storedPassword = dataUser.rows[0]["password"];
+      let storedPassword = dataUser.data[0]["password"];
 
       statusRequest = await bcrypt.compare(passwordReq, storedPassword);
 
       if(statusRequest) {
 
-        let roleData = await usersImpl.getRoleByUserId(dataUser.rows[0]["user_id"]);
+        let roleData = await usersImpl.getRoleByUserId(dataUser.data[0]["user_id"]);
 
         let roles = [];
 
-        for(i = 0 ; i < roleData.rowCount; i++) { roles[i] = roleData.rows[i]["role_name"] }
+        for(i = 0 ; i < roleData.rowCount; i++) { roles[i] = roleData.data[i]["role_name"] }
 
         let dataToken = {
-          user_id: dataUser.rows[0]["user_id"],
-          username: dataUser.rows[0]["username"],
-          first_name: dataUser.rows[0]["first_name"],
-          last_name: dataUser.rows[0]["last_name"],
-          employee_id: dataUser.rows[0]["employee_id"],
+          user_id: dataUser.data[0]["user_id"],
+          username: dataUser.data[0]["username"],
+          first_name: dataUser.data[0]["first_name"],
+          last_name: dataUser.data[0]["last_name"],
+          employee_id: dataUser.data[0]["employee_id"],
           roles: roles,
         }
 
@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
         response.message = "Invalid credentials!";
       }
 
-      res.locals.userId = dataUser.rows[0]["user_id"]
+      res.locals.userId = dataUser.data[0]["user_id"]
     } else {
       response.status = "error";
       response.message = "Data not found!";

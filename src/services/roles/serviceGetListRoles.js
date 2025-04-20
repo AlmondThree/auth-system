@@ -2,8 +2,6 @@ const Users = require("../../models/Users");
 const Services = require("../../models/Services");
 
 const getListRoles = async (req, res) => {
-  let reqBody = req.body;
-
   const usersObj = new Users();
   const serviceObj = new Services();
 
@@ -12,15 +10,14 @@ const getListRoles = async (req, res) => {
   try {
     let data = await usersObj.getRolesList();
 
-    if(data) {
+    if(data.status) {
         serviceObj.setResponseObj(200, {
             status: true,
-            data: data.rows,
+            data: data.data,
         },null, null)
     } else {
         serviceObj.setResponseObj(400, {
-            status: false,
-            data: data,
+            message: "Internal Server Error"
         },null, data)
     }
 
