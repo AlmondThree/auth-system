@@ -1,3 +1,4 @@
+const { text } = require("body-parser");
 const { callDatabase } = require("../utils/postgre/callDatabaseAPI");
 
 class Users {
@@ -150,6 +151,59 @@ class Users {
       status: responseDB.is_success ? responseDB.is_success : true,
       message: responseDB.message ? responseDB.message : null,
       rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
+  }
+
+  async getListUsers(page, size, q) {
+
+    let whereClaues = (q !== undefined && q !== "") ? "where username ilike $3 or employee_id ilike $3 or u.user_id::text ilike $3" : '';
+
+    let query = {
+      text: `select user_id, username, first_name, last_name, email, employee_id from users u ${whereClaues} order by user_id limit $1 offset $2`,
+      values: (whereClaues != '') ? [page, size, `%${q}%`] : [page, size],
+    };
+
+    let pages = {
+      page: Number(page),
+      size: Number(size),
+      total_data: null,
+      last_page: null,
+    }
+
+    if(page == null || page === 'undefined' || size == null || size === 'undefined' || page < 1 || size < 1) {
+      query.values[0] = 1;
+      query.values[1] = 0;
+      pages = null;
+    } else {
+      let offset = (page - 1) * size;
+
+      query.values[0] = Number(size);
+      query.values[1] = offset;
+
+      const whereQueryTotal = whereClaues;
+
+      const queryTotal = {
+        text: `select count(*) as totalRows from users u ${whereQueryTotal.replaceAll("$3", "$1")}`,
+        values: (whereClaues != '') ? [`%${q}%`] : []
+      }
+
+      const callPages = await callDatabase(queryTotal);
+
+      if(callPages.is_success) {  
+        pages.total_data = Number(callPages.data[0].totalrows);
+        pages.last_page = Math.ceil(callPages.data[0].totalrows / size)
+      }
+
+    }
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ? responseDB.is_success : false,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      pages: pages,
       data: responseDB.data,
     };
   }
