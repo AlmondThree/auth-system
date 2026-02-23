@@ -14,5 +14,9 @@
     "refresh_token": {
         "parameter": ["token", "user_id"],
         "mandatory_parameter": ["token", "user_id"]
+    },
+    "user_details": {
+        "parameter": ["user_id"],
+        "mandatory_parameter": ["user_id"]
     }
 }

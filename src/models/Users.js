@@ -207,6 +207,45 @@ class Users {
       data: responseDB.data,
     };
   }
+
+  async getUserDetails(userId) {
+
+    if(userId !== undefined && userId != '') {
+        let query = {
+        text: `
+          select 
+            u.user_id,
+            u.username,
+            u.first_name,
+            u.last_name, 
+            u.email, 
+            u.employee_id,
+            string_agg(ur.role_name, '~') as roles
+          from users u
+          join role_mapping rm on u.user_id = rm.user_id 
+          join user_role ur on rm.id_role = ur.id_role 
+          where u.user_id = $1
+          group by u.user_id 
+        `,
+        values: [userId]
+      }
+
+      const responseDB = await callDatabase(query);
+
+      return {
+        status: responseDB.is_success ? responseDB.is_success : false,
+        message: responseDB.message ? responseDB.message : null,
+        rowCount: responseDB.rowCount,
+        data: responseDB.data,
+      };
+    } else {
+      return {
+        status: false,
+        message: "userId is null or invalid datatype",
+      }
+    }
+
+  }
 }
 
 module.exports = Users;
