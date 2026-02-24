@@ -140,10 +140,51 @@ class Users {
     };
   }
 
-  async getRolesList() {
+  async getRolesList(q, page, size) {
+
+    const whereClause = (q !== undefined && q != '') ? 'where role_name ilike $1 or description ilike $1' : '';
+
     let query = {
-      text: "select role_name, description from user_role ur",
+      text: `select role_name, description from user_role ur ${whereClause}`,
+      values: (q !== undefined && q != '') ? [`%${q}%`] : [],
     };
+
+    let pages = {
+      page: Number(page),
+      size: Number(size),
+      total_data: null,
+      last_page: null,
+    }
+
+    if (page !== undefined && size !== undefined && page >= 1 && size >= 1) {
+      
+      let paramLimit = '$1';
+      let paramOffset = '$2';
+
+      if (whereClause != '') {paramLimit = '$2'; paramOffset = '$3';}
+      
+      query.text = query.text + `order by role_name limit ${paramLimit} offset ${paramOffset}`
+
+      let offset = (page - 1) * size;
+      query.values.push(size)
+      query.values.push(offset);
+
+      const whereQueryTotal = whereClause;
+
+      const queryTotal = {
+        text: `select count(*) as totalRows from user_role ${whereQueryTotal}`,
+        values: (whereClause != '') ? [`%${q}%`] : []
+      }
+
+      const callPages = await callDatabase(queryTotal);
+
+      if(callPages.is_success) {  
+        pages.total_data = Number(callPages.data[0].totalrows);
+        pages.last_page = Math.ceil(callPages.data[0].totalrows / size)
+      }
+    } else {
+      pages = null;
+    }
 
     const responseDB = await callDatabase(query);
 
@@ -151,6 +192,7 @@ class Users {
       status: responseDB.is_success ? responseDB.is_success : true,
       message: responseDB.message ? responseDB.message : null,
       rowCount: responseDB.rowCount,
+      pages: pages,
       data: responseDB.data,
     };
   }
@@ -171,7 +213,7 @@ class Users {
       last_page: null,
     }
 
-    if(page == null || page === 'undefined' || size == null || size === 'undefined' || page < 1 || size < 1) {
+    if(page === null || page === undefined || size === null || size === undefined || page < 1 || size < 1) {
       query.values[0] = 1;
       query.values[1] = 0;
       pages = null;

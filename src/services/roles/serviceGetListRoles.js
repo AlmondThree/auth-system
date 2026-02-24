@@ -8,11 +8,15 @@ const getListRoles = async (req, res) => {
   serviceObj.createResponseObj();
 
   try {
-    let data = await usersObj.getRolesList();
+    const query = req.query.q;
+    const page = req.query.page;
+    const size = req.query.size
+    let data = await usersObj.getRolesList(query, page, size);
 
     if(data.status) {
         serviceObj.setResponseObj(200, {
             status: true,
+            pages: data.pages,
             data: data.data,
         },null, null)
     } else {
