@@ -18,5 +18,9 @@
     "user_details": {
         "parameter": ["user_id"],
         "mandatory_parameter": ["user_id"]
+    },
+    "assign_roles": {
+        "parameter": ["userId", "roleId"],
+        "mandatory_parameter": ["userId", "roleId"]
     }
 }
