@@ -11,6 +11,7 @@ const { getListRoles } = require('../../services/roles/serviceGetListRoles');
 const { serviceRefreshToken } = require('../../services/authorize/serviceRefreshToken');
 const { getListUser } = require('../../services/user/getListUser');
 const { getDetailUsers } = require('../../services/user/getDetailUser');
+const { assignRoles } = require('../../services/roles/assignRoles');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -62,6 +63,24 @@ router.route('/users/list').all(async (req, res, next) => {
     switch (req.method) {
         case "GET":
             await getListUser(req, res);
+            next()       
+            break;
+    
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/user/roles').all(async (req, res, next) => {
+    switch (req.method) {
+        case "POST":
+            await assignRoles(req, res);
             next()       
             break;
     

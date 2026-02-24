@@ -125,78 +125,6 @@ class Users {
     };
   }
 
-  async getRoleByUserId(userId) {
-    let query = {
-      text: "select role_name from user_role UR join role_mapping RM on UR.id_role = RM.id_role where RM.user_id = $1",
-      values: [userId],
-    };
-    const responseDB = await callDatabase(query);
-
-    return {
-      status: responseDB.is_success ? responseDB.is_success : true,
-      message: responseDB.message ? responseDB.message : null,
-      rowCount: responseDB.rowCount,
-      data: responseDB.data,
-    };
-  }
-
-  async getRolesList(q, page, size) {
-
-    const whereClause = (q !== undefined && q != '') ? 'where role_name ilike $1 or description ilike $1' : '';
-
-    let query = {
-      text: `select role_name, description from user_role ur ${whereClause}`,
-      values: (q !== undefined && q != '') ? [`%${q}%`] : [],
-    };
-
-    let pages = {
-      page: Number(page),
-      size: Number(size),
-      total_data: null,
-      last_page: null,
-    }
-
-    if (page !== undefined && size !== undefined && page >= 1 && size >= 1) {
-      
-      let paramLimit = '$1';
-      let paramOffset = '$2';
-
-      if (whereClause != '') {paramLimit = '$2'; paramOffset = '$3';}
-      
-      query.text = query.text + `order by role_name limit ${paramLimit} offset ${paramOffset}`
-
-      let offset = (page - 1) * size;
-      query.values.push(size)
-      query.values.push(offset);
-
-      const whereQueryTotal = whereClause;
-
-      const queryTotal = {
-        text: `select count(*) as totalRows from user_role ${whereQueryTotal}`,
-        values: (whereClause != '') ? [`%${q}%`] : []
-      }
-
-      const callPages = await callDatabase(queryTotal);
-
-      if(callPages.is_success) {  
-        pages.total_data = Number(callPages.data[0].totalrows);
-        pages.last_page = Math.ceil(callPages.data[0].totalrows / size)
-      }
-    } else {
-      pages = null;
-    }
-
-    const responseDB = await callDatabase(query);
-
-    return {
-      status: responseDB.is_success ? responseDB.is_success : true,
-      message: responseDB.message ? responseDB.message : null,
-      rowCount: responseDB.rowCount,
-      pages: pages,
-      data: responseDB.data,
-    };
-  }
-
   async getListUsers(page, size, q) {
 
     let whereClaues = (q !== undefined && q !== "") ? "where username ilike $3 or employee_id ilike $3 or u.user_id::text ilike $3" : '';
@@ -288,6 +216,107 @@ class Users {
     }
 
   }
+
+  async getRoleByUserId(userId) {
+    let query = {
+      text: "select role_name from user_role UR join role_mapping RM on UR.id_role = RM.id_role where RM.user_id = $1",
+      values: [userId],
+    };
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ? responseDB.is_success : true,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
+  }
+
+  async getRolesList(q, page, size) {
+
+    const whereClause = (q !== undefined && q != '') ? 'where role_name ilike $1 or description ilike $1' : '';
+
+    let query = {
+      text: `select role_name, description from user_role ur ${whereClause}`,
+      values: (q !== undefined && q != '') ? [`%${q}%`] : [],
+    };
+
+    let pages = {
+      page: Number(page),
+      size: Number(size),
+      total_data: null,
+      last_page: null,
+    }
+
+    if (page !== undefined && size !== undefined && page >= 1 && size >= 1) {
+      
+      let paramLimit = '$1';
+      let paramOffset = '$2';
+
+      if (whereClause != '') {paramLimit = '$2'; paramOffset = '$3';}
+      
+      query.text = query.text + `order by role_name limit ${paramLimit} offset ${paramOffset}`
+
+      let offset = (page - 1) * size;
+      query.values.push(size)
+      query.values.push(offset);
+
+      const whereQueryTotal = whereClause;
+
+      const queryTotal = {
+        text: `select count(*) as totalRows from user_role ${whereQueryTotal}`,
+        values: (whereClause != '') ? [`%${q}%`] : []
+      }
+
+      const callPages = await callDatabase(queryTotal);
+
+      if(callPages.is_success) {  
+        pages.total_data = Number(callPages.data[0].totalrows);
+        pages.last_page = Math.ceil(callPages.data[0].totalrows / size)
+      }
+    } else {
+      pages = null;
+    }
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ? responseDB.is_success : true,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      pages: pages,
+      data: responseDB.data,
+    };
+  }
+
+  async assign_roles(userId, roleId) {
+    let query = {
+      text: `select assign_roles ($1, $2);`,
+      values: [userId, roleId]
+    }
+
+    const responseDB = await callDatabase(query);
+    if (responseDB.is_success) {
+      let dataRaw = responseDB.data[0].assign_roles;
+
+      dataRaw = dataRaw.substr(1, dataRaw.length - 2);
+
+      let data = dataRaw.split(",");
+
+      return {
+        status: data[0] == "t" ? true : false,
+        message: data[1],
+        id: data[2],
+      }
+
+    } else {
+      return {
+        status: responseDB.is_success,
+        message: responseDB.message,
+      }
+    }
+  }
+
 }
 
 module.exports = Users;
