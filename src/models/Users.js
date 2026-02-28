@@ -102,7 +102,7 @@ class Users {
     const responseDB = await callDatabase(query);
 
     return {
-      status: responseDB.is_success ? responseDB.is_success : true,
+      status: responseDB.is_success ? true : responseDB.is_success,
       message: responseDB.message ? responseDB.message : null,
       rowCount: responseDB.rowCount,
       data: responseDB.data,
@@ -118,7 +118,7 @@ class Users {
     const responseDB = await callDatabase(query);
 
     return {
-      status: responseDB.is_success ? responseDB.is_success : true,
+      status: responseDB.is_success ? true : responseDB.is_success,
       message: responseDB.message ? responseDB.message : null,
       rowCount: responseDB.rowCount,
       data: responseDB.data,
@@ -203,7 +203,7 @@ class Users {
       const responseDB = await callDatabase(query);
 
       return {
-        status: responseDB.is_success ? responseDB.is_success : false,
+        status: responseDB.is_success ? true : responseDB.is_success,
         message: responseDB.message ? responseDB.message : null,
         rowCount: responseDB.rowCount,
         data: responseDB.data,
@@ -225,7 +225,7 @@ class Users {
     const responseDB = await callDatabase(query);
 
     return {
-      status: responseDB.is_success ? responseDB.is_success : true,
+      status: responseDB.is_success ? true : responseDB.is_success,
       message: responseDB.message ? responseDB.message : null,
       rowCount: responseDB.rowCount,
       data: responseDB.data,
@@ -255,7 +255,7 @@ class Users {
 
       if (whereClause != '') {paramLimit = '$2'; paramOffset = '$3';}
       
-      query.text = query.text + `order by role_name limit ${paramLimit} offset ${paramOffset}`
+      query.text = query.text + ` order by role_name limit ${paramLimit} offset ${paramOffset}`
 
       let offset = (page - 1) * size;
       query.values.push(size)
@@ -281,7 +281,7 @@ class Users {
     const responseDB = await callDatabase(query);
 
     return {
-      status: responseDB.is_success ? responseDB.is_success : true,
+      status: responseDB.is_success ?  true : responseDB.is_success,
       message: responseDB.message ? responseDB.message : null,
       rowCount: responseDB.rowCount,
       pages: pages,

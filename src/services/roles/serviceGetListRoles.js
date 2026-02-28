@@ -20,7 +20,7 @@ const getListRoles = async (req, res) => {
             data: data.data,
         },null, null)
     } else {
-        serviceObj.setResponseObj(400, {
+        serviceObj.setResponseObj(500, {
             message: "Internal Server Error"
         },null, data)
     }
@@ -30,7 +30,7 @@ const getListRoles = async (req, res) => {
       status: false,
       message: e.toString(),
     };
-    serviceObj.setResponseObj(400, errorPayload, null, e.toString());
+    serviceObj.setResponseObj(500, errorPayload, null, e.toString());
   }
 
   let response = serviceObj.getResponseObj();
