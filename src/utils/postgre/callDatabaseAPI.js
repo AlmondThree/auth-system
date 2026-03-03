@@ -2,15 +2,13 @@ const { poolConnection } = require('./poolConnection.js')
 
 const callDatabase = async (paramQuery) => {
 
+    const connectionInstance = (await poolConnection()).getInstance();
+
+    const client = await connectionInstance.connect();
+
     try {
 
-        const connectionInstance = (await poolConnection()).getInstance();
-
-        const client = await connectionInstance.connect();
-
         const responseDB = await client.query(paramQuery)
-
-        await client.release();
         
         return (
             {
@@ -27,6 +25,8 @@ const callDatabase = async (paramQuery) => {
                 message: `Call Database: ${e.toString()}`,
             }
         )
+    } finally {
+        await client.release();
     }
 }
 
