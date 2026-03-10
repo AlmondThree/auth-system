@@ -237,7 +237,7 @@ class Users {
     const whereClause = (q !== undefined && q != '') ? 'where role_name ilike $1 or description ilike $1' : '';
 
     let query = {
-      text: `select role_name, description from user_role ur ${whereClause}`,
+      text: `select id_role, role_name, description from user_role ur ${whereClause}`,
       values: (q !== undefined && q != '') ? [`%${q}%`] : [],
     };
 
