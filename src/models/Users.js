@@ -1,4 +1,3 @@
-const { text } = require("body-parser");
 const { callDatabase } = require("../utils/postgre/callDatabaseAPI");
 
 class Users {
@@ -194,7 +193,7 @@ class Users {
           from users u
           join role_mapping rm on u.user_id = rm.user_id 
           join user_role ur on rm.id_role = ur.id_role 
-          where u.user_id = $1
+          where u.user_id = $1 and rm.is_active = true
           group by u.user_id 
         `,
         values: [userId]

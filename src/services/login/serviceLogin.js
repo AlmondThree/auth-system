@@ -1,4 +1,5 @@
 const Users = require("../../models/Users");
+const Token = require("../../models/Token");
 const serviceConfig = require("../../config/json/servicesConfig.json");
 const {
   validateReqPayload,
@@ -6,14 +7,14 @@ const {
 const bcrypt = require("bcrypt");
 const {createJWT, createRefreshToken} = require('../../utils/general/createJWT')
 
+const { generateRandomCode } = require('../../utils/general/generateRandomCode');
+
 const loginUser = async (req, res) => {
   let reqBody = req.body;
   let statusRequest = false;
   let response = {
     status: "",
     message: "",
-    token: "",
-    refresh_token: "",
   };
 
   const statusReqBody = validateReqPayload(
@@ -50,13 +51,23 @@ const loginUser = async (req, res) => {
           roles: roles,
         }
 
-        const token = createJWT(dataToken);
+        const accessToken = createJWT(dataToken);
         const refreshToken = createRefreshToken(dataToken);
+
+        const authCode = generateRandomCode(16)
+
+        const token = new Token();
+
+        await token.insertTokenMongo(
+          authCode,
+          accessToken,
+          refreshToken,
+          true
+        )
 
         response.status = "success";
         response.message = "Login Successful!";
-        response.token = token;
-        response.refresh_token = refreshToken;
+        response.code = authCode;
       } else {
         response.status = "error";
         response.message = "Invalid credentials!";

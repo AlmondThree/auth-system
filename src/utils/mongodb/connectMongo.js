@@ -14,8 +14,6 @@ const connectMongo = async () => {
         getInstance : function () {
             if (instance == null) {
                 instance = new newConnection();
-
-                instance.contructor = null;
             }
             return instance;
         }

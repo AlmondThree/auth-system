@@ -12,6 +12,7 @@ const { serviceRefreshToken } = require('../../services/authorize/serviceRefresh
 const { getListUser } = require('../../services/user/getListUser');
 const { getDetailUsers } = require('../../services/user/getDetailUser');
 const { assignRoles } = require('../../services/roles/assignRoles');
+const { getTokenByAuthCode } = require('../../services/token/serviceGetTokenByAuthCode')
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -119,6 +120,35 @@ router.route('/authorize/token').all(async (req, res, next) => {
             await serviceAuthorizeToken(req, res)
             next()       
             break;
+    
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/token/connect').all(async (req, res, next) => {
+    switch (req.method) {
+        case "POST":
+            switch (req.body.grant_type) {
+                case "authorization_code":
+                    await getTokenByAuthCode(req, res);
+                    return next()
+                
+                default: 
+                    const serviceObj = new Services()
+                    res.locals = serviceObj.createNextAttribute(400, {
+                        status: "error",
+                        message: "Invalid Grant Type!",
+                    }, null, "Invalid grant type")
+                    next()
+                    break;
+            }
     
         default:
             const serviceObj = new Services()
