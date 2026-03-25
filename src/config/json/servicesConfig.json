@@ -22,5 +22,9 @@
     "assign_roles": {
         "parameter": ["userId", "roleId"],
         "mandatory_parameter": ["userId", "roleId"]
+    },
+    "assign_scope": {
+        "parameter": ["roleId", "scopeId"],
+        "mandatory_parameter": ["roleId", "scopeId"]
     }
 }
