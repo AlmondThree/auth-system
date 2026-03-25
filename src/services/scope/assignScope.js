@@ -17,14 +17,14 @@ const assignScope = async (req, res) => {
 
         if(isReqBodyValid) {
             const data = {
-                roleId: reqBody.roleId,
-                scopeId: (reqBody.scopeId instanceof Array) ? reqBody.scopeId : null,
+                scopeId: reqBody.scopeId,
+                roleId: (reqBody.roleId instanceof Array) ? reqBody.roleId : null,
             }
 
             let responseList = [];
 
-            for(let id of data.scopeId) {
-                const response = await user.assign_scope(data.roleId, id);
+            for(let id of data.roleId) {
+                const response = await user.assign_scope(id, data.scopeId);
                 responseList.push(response);
             }
 
