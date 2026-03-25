@@ -373,6 +373,38 @@ class Users {
     };
   }
 
+  async getScopeDetails(scopeId) {
+
+    if(scopeId !== undefined && scopeId != '') {
+        let query = {
+        text: `
+          select
+            us.id_scope,
+            us.scope_name,
+            us.description 
+          from user_scope us 
+          where us.id_scope  = $1
+        `,
+        values: [scopeId]
+      }
+
+      const responseDB = await callDatabase(query);
+
+      return {
+        status: responseDB.is_success ? true : responseDB.is_success,
+        message: responseDB.message ? responseDB.message : null,
+        rowCount: responseDB.rowCount,
+        data: responseDB.data,
+      };
+    } else {
+      return {
+        status: false,
+        message: "scopeId is null or invalid datatype",
+      }
+    }
+
+  }
+
   async assign_scope(roleId, scopeId) {
     let query = {
       text: `select assign_scope ($1, $2);`,
