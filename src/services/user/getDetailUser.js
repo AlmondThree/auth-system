@@ -22,7 +22,7 @@ const getDetailUsers = async (req, res) => {
                             lastName: item.last_name,
                             email: item.email,
                             employeeId: item.employee_id,
-                            roles: item.roles.split("~")
+                            roles: (item.roles) ? item.roles.split("~") : [],
                         }
                     })
                     service.setResponseObj(200, {

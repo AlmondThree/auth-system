@@ -19,7 +19,7 @@ const getDetailScope = async (req, res) => {
                         id_scope: dataRaw.id_scope,
                         scope_name: dataRaw.scope_name,
                         description: dataRaw.description,
-                        roles: dataRaw.roles.split('~')
+                        roles: (dataRaw.roles) ? dataRaw.roles.split('~') : [],
                     }
                     service.setResponseObj(200, {
                         status: true,
