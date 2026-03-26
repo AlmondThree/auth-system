@@ -381,9 +381,13 @@ class Users {
           select
             us.id_scope,
             us.scope_name,
-            us.description 
+            us.description,
+            string_agg(ur.role_name, '~') as roles
           from user_scope us 
+          join scope_mapping sm on us.id_scope  = sm.id_scope 
+          join user_role ur on sm.id_role = ur.id_role 
           where us.id_scope  = $1
+          group by us.id_scope 
         `,
         values: [scopeId]
       }
