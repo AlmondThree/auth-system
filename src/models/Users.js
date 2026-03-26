@@ -191,9 +191,9 @@ class Users {
             u.employee_id,
             string_agg(ur.role_name, '~') as roles
           from users u
-          join role_mapping rm on u.user_id = rm.user_id 
-          join user_role ur on rm.id_role = ur.id_role 
-          where u.user_id = $1 and rm.is_active = true
+          left join role_mapping rm on u.user_id = rm.user_id and rm.is_active = true
+          left join user_role ur on rm.id_role = ur.id_role 
+          where u.user_id = $1
           group by u.user_id 
         `,
         values: [userId]
