@@ -16,6 +16,9 @@ const { getTokenByAuthCode } = require('../../services/token/serviceGetTokenByAu
 const { getListScope } = require('../../services/scope/serviceGetListScope');
 const { assignScope } = require('../../services/scope/assignScope');
 const { getDetailScope } = require('../../services/scope/getDetailScope');
+const { pushCredentialsServices } = require('../../services/credentials/pushCredentials');
+const { getCredentialsServices } = require('../../services/credentials/getCredentials');
+const { updateCredentialsServices } = require('../../services/credentials/updateCredentials');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -243,6 +246,46 @@ router.route('/refresh/token').all(async (req, res, next) => {
             next()       
             break;
     
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/database/credentials').all(async (req, res, next) => {
+    switch (req.method) {
+        case "POST":
+            await pushCredentialsServices(req, res)
+            next()       
+            break;
+
+        case "GET":
+            await getCredentialsServices(req, res)
+            next()       
+            break;
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/database/credentials/:dbName').all(async (req, res, next) => {
+    switch (req.method) {
+        case "PUT":
+            await updateCredentialsServices(req, res)
+            next()       
+            break;
+
         default:
             const serviceObj = new Services()
             res.locals = serviceObj.createNextAttribute(405, {
