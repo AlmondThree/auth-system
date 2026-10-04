@@ -19,7 +19,17 @@ const getCredentialsServices = async (req, res) => {
 
         let responseData = {};
 
-      if(req.query["format"] == "jdbc") {
+      if(req.query["format"] == "jdbc" && req.query["isSupabase"] === "true") {
+        responseData = {
+            id: data._id,
+            dbType: data.dbType,
+            dbName: data.dbName,
+            jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/postgres?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
+            username: parsedData.username,
+            password: parsedData.password,
+            isActive: data.isActive,
+        }
+      }else if (req.query["format"] == "jdbc"){
         responseData = {
             id: data._id,
             dbType: data.dbType,
