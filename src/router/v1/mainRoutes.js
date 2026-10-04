@@ -19,6 +19,7 @@ const { getDetailScope } = require('../../services/scope/getDetailScope');
 const { pushCredentialsServices } = require('../../services/credentials/pushCredentials');
 const { getCredentialsServices } = require('../../services/credentials/getCredentials');
 const { updateCredentialsServices } = require('../../services/credentials/updateCredentials');
+const { getListCredentialsServices } = require('../../services/credentials/getListCredentials');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -286,6 +287,23 @@ router.route('/database/credentials/:dbName').all(async (req, res, next) => {
             next()       
             break;
 
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/database/credentials/list').all(async (req, res, next) => {
+    switch (req.method) {
+        case "GET":
+            await getListCredentialsServices(req, res)
+            next()       
+            break;
         default:
             const serviceObj = new Services()
             res.locals = serviceObj.createNextAttribute(405, {
