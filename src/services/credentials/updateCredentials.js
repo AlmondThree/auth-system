@@ -41,6 +41,7 @@ const updateCredentialsServices = async (req, res) => {
             let updatedData = {
                 $set: {
                     encryptedData: encryptedData,
+                    isSupabase: (req.body.isSupabase !== undefined && req.body.isSupabase !== null) ? req.body.isSupabase : data.isSupabase,
                     isActive: ( req.body.isActive !== undefined && req.body.isActive !== null) ? req.body.isActive : data.isActive,       
                 }
             }

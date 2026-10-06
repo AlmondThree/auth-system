@@ -24,7 +24,7 @@ const getCredentialsServices = async (req, res) => {
             id: data._id,
             dbType: data.dbType,
             dbName: data.dbName,
-            jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/postgres?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
+            jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/${(data.isSupabase) ? "postgres" : data.dbName}?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
             username: parsedData.username,
             password: parsedData.password,
             isActive: data.isActive,
