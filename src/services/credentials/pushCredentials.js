@@ -24,6 +24,7 @@ const pushCredentialsServices = async (req, res) => {
       dbType: req.body.dbType,
       dbName: req.body.dbName,
       encryptedData: encryptedData,
+      isSupabase: req.body.isSupabase,
       isActive: true,
     }
 
