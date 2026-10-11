@@ -20,6 +20,10 @@ const { pushCredentialsServices } = require('../../services/credentials/pushCred
 const { getCredentialsServices } = require('../../services/credentials/getCredentials');
 const { updateCredentialsServices } = require('../../services/credentials/updateCredentials');
 const { getListCredentialsServices } = require('../../services/credentials/getListCredentials');
+const { getListCredentialsTenantServices } = require('../../services/credentialsTenant/getListCredentialsTenant');
+const { getCredentialsTenantServices } = require('../../services/credentialsTenant/getCredentialsTenant');
+const { updateCredentialsTenantServices } = require('../../services/credentialsTenant/updateCredentialsTenant');
+const { pushCredentialsTenantServices } = require('../../services/credentialsTenant/pushCredentialsTenant');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -302,6 +306,63 @@ router.route('/database/credentials/list').all(async (req, res, next) => {
     switch (req.method) {
         case "GET":
             await getListCredentialsServices(req, res)
+            next()       
+            break;
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/tenant/credentials').all(async (req, res, next) => {
+    switch (req.method) {
+        case "POST":
+            await pushCredentialsTenantServices(req, res)
+            next()       
+            break;
+
+        case "GET":
+            await getCredentialsTenantServices(req, res)
+            next()       
+            break;
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/tenant/credentials/:tenantId').all(async (req, res, next) => {
+    switch (req.method) {
+        case "PUT":
+            await updateCredentialsTenantServices(req, res)
+            next()       
+            break;
+
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/tenant/credentials/list').all(async (req, res, next) => {
+    switch (req.method) {
+        case "GET":
+            await getListCredentialsTenantServices(req, res)
             next()       
             break;
         default:
