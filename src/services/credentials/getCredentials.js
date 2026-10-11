@@ -22,6 +22,7 @@ const getCredentialsServices = async (req, res) => {
       if(req.query["format"] == "jdbc" && req.query["isSupabase"] === "true") {
         responseData = {
             id: data._id,
+            appName: data.appName,
             dbType: data.dbType,
             dbName: data.dbName,
             jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/${(data.isSupabase) ? "postgres" : data.dbName}?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
@@ -32,6 +33,7 @@ const getCredentialsServices = async (req, res) => {
       }else if (req.query["format"] == "jdbc"){
         responseData = {
             id: data._id,
+            appName: data.appName,
             dbType: data.dbType,
             dbName: data.dbName,
             jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/${data.dbName}?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
@@ -42,6 +44,7 @@ const getCredentialsServices = async (req, res) => {
       } else {
         responseData = {
             id: data._id,
+            appName: data.appName,
             dbType: data.dbType,
             dbName: data.dbName,
             hostname: parsedData.hostname,
