@@ -29,6 +29,7 @@ const getListCredentialsServices = async (req, res) => {
         ) {
           responseData.push({
             id: data._id,
+            appName: data.appName,
             dbType: data.dbType,
             dbName: data.dbName,
             jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/${(data.isSupabase) ? "postgres" : data.dbName}?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
@@ -39,6 +40,7 @@ const getListCredentialsServices = async (req, res) => {
         } else if (req.query["format"] == "jdbc") {
           responseData.push({
             id: data._id,
+            appName: data.appName,
             dbType: data.dbType,
             dbName: data.dbName,
             jdbcUrl: `jdbc:${data.dbType}://${parsedData.hostname}:${parsedData.port}/${data.dbName}?user=${parsedData.username}&password=${parsedData.password}&prepareThreshold=0`,
@@ -49,6 +51,7 @@ const getListCredentialsServices = async (req, res) => {
         } else {
           responseData.push({
             id: data._id,
+            appName: data.appName,
             dbType: data.dbType,
             dbName: data.dbName,
             hostname: parsedData.hostname,

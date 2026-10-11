@@ -21,6 +21,7 @@ const pushCredentialsServices = async (req, res) => {
     const encryptedData = encrypt(dataString);
 
     const data = {
+      appName: req.body.appName,
       dbType: req.body.dbType,
       dbName: req.body.dbName,
       encryptedData: encryptedData,
