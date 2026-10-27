@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { connectMongo } = require("./connectMongo");
 
-const getListCredentials = async (dbId, dbType, dbName, isActive) => {
+const getListCredentials = async (appName, dbId, dbType, dbName, isActive) => {
   const mongoObj = await connectMongo();
 
   const mongoClient = mongoObj.getInstance();
@@ -10,6 +10,10 @@ const getListCredentials = async (dbId, dbType, dbName, isActive) => {
 
   if (dbId) {
     filter._id = new ObjectId(dbId);
+  }
+
+  if(appName) {
+    filter.appName = appName;
   }
 
   if (dbType) {
@@ -41,7 +45,7 @@ const getCredentials = async (dbId) => {
   let data = await mongoClient
     .db("db_credentials")
     .collection("credentials")
-    .find({ dbName: dbId })
+    .find({ _id: new ObjectId(dbId) })
     .toArray();
 
   return data;
@@ -70,7 +74,7 @@ const updateCredentials = async (dbId, credentials) => {
   let data = await mongoClient
     .db("db_credentials")
     .collection("credentials")
-    .updateOne({ dbName: dbId }, credentials);
+    .updateOne({ _id: dbId }, credentials);
 
   return data;
 };

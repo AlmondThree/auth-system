@@ -8,7 +8,9 @@ const getCredentialsServices = async (req, res) => {
   service.createResponseObj();
 
   try {
-    let resMongo = await getCredentials(req.query["dbName"]);
+    let resMongo = await getCredentials(req.params.id);
+
+    console.log(req.params.id);
 
     if (resMongo && resMongo.length > 0) {
       const data = resMongo[0];
