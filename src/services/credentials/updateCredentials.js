@@ -46,7 +46,7 @@ const updateCredentialsServices = async (req, res) => {
                 }
             }
 
-            let resMongo = await updateCredentials(req.params.dbName, updatedData);
+            let resMongo = await updateCredentials(req.params.id, updatedData);
 
             if (resMongo.acknowledged) {
                 service.setResponseObj(

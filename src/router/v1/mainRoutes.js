@@ -269,10 +269,6 @@ router.route('/database/credentials').all(async (req, res, next) => {
             next()       
             break;
 
-        case "GET":
-            await getCredentialsServices(req, res)
-            next()       
-            break;
         default:
             const serviceObj = new Services()
             res.locals = serviceObj.createNextAttribute(405, {
@@ -284,8 +280,13 @@ router.route('/database/credentials').all(async (req, res, next) => {
     }
 })
 
-router.route('/database/credentials/:dbName').all(async (req, res, next) => {
+router.route('/database/credentials/:id').all(async (req, res, next) => {
     switch (req.method) {
+        case "GET":
+            await getCredentialsServices(req, res)
+            next()       
+            break;
+            
         case "PUT":
             await updateCredentialsServices(req, res)
             next()       

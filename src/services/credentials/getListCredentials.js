@@ -9,6 +9,7 @@ const getListCredentialsServices = async (req, res) => {
 
   try {
     let resMongo = await getListCredentials(
+      req.query["appName"],
       req.query["dbId"],
       req.query["dbType"],
       req.query["dbName"],
