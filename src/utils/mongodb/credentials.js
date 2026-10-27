@@ -71,10 +71,12 @@ const updateCredentials = async (dbId, credentials) => {
 
   const mongoClient = mongoObj.getInstance();
 
+  let mongoId = new ObjectId(dbId);
+
   let data = await mongoClient
     .db("db_credentials")
     .collection("credentials")
-    .updateOne({ _id: dbId }, credentials);
+    .updateOne({ _id: mongoId }, credentials);
 
   return data;
 };
