@@ -10,9 +10,9 @@ const updateCredentialsServices = async (req, res) => {
 
   try {
 
-    if (req.params.dbName) {
+    if (req.params.id) {
 
-        let existingData = await getCredentials(req.params.dbName);
+        let existingData = await getCredentials(req.params.id);
 
         if (existingData.length > 0 ) {
             const data = existingData[0];
@@ -20,7 +20,15 @@ const updateCredentialsServices = async (req, res) => {
             const decryptedData = decrypt(data.encryptedData);
 
             const parsedData = JSON.parse(decryptedData);
+
+            if(req.body.dbName) {
+                parsedData.dbName = req.body.dbName;
+            }
             
+            if(req.body.dbType) {
+                parsedData.dbType = req.body.dbType;
+            }
+
             if(req.body.hostname) {
                 parsedData.hostname = req.body.hostname;
             }
@@ -54,7 +62,7 @@ const updateCredentialsServices = async (req, res) => {
                     {
                     status: true,
                     message: "Success update data",
-                    id: resMongo.insertedId,
+                    id: req.params.id,
                     },
                     null,
                     null,
