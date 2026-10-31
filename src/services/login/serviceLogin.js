@@ -46,6 +46,7 @@ const loginUser = async (req, res) => {
         for(i = 0 ; i < roleData.rowCount; i++) { roles[i] = roleData.data[i]["role_name"] }
 
         let dataToken = {
+          tenant_id: dataUser.data[0]["tenant_id"],
           user_id: dataUser.data[0]["user_id"],
           username: dataUser.data[0]["username"],
           first_name: dataUser.data[0]["first_name"],

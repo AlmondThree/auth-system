@@ -7,6 +7,7 @@ const createJWT = (data) => {
     dateNow = new Date(dateNow);
 
     let dataToken = {
+        tenant_id: data.tenant_id,
         user_id: data.user_id,
         username: data.username,
         employee_id: data.employee_id,
