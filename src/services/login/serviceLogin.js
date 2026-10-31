@@ -31,7 +31,7 @@ const loginUser = async (req, res) => {
     let dataCred = await usersImpl.getCredDataByUsernameTenant(tenantIdReq, usernameReq);
 
     if (dataCred.rowCount > 0) {
-      let dataUser = await usersImpl.getDataByUsername(usernameReq);
+      let dataUser = await usersImpl.getDataByUsernameTenant(usernameReq, tenantIdReq);
 
       let storedPassword = dataCred.data[0]["password"];
 
