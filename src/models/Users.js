@@ -2,6 +2,7 @@ const { callDatabase } = require("../utils/postgre/callDatabaseAPI");
 
 class Users {
   createObject(
+    tenantId,
     username,
     password,
     role,
@@ -13,8 +14,10 @@ class Users {
     positionId,
     positionName,
     vip,
-    isActive
+    isActive,
+    userAction
   ) {
+    this.tenantId = tenantId;
     this.username = username;
     this.password = password;
     this.role = role;
@@ -27,6 +30,7 @@ class Users {
     this.positionName = positionName;
     this.vip = vip;
     this.isActive = isActive;
+    this.userAction = userAction;
   }
 
   getObject() {
@@ -43,6 +47,7 @@ class Users {
       positionName: this.positionName,
       vip: this.vip,
       isActive: this.isActive,
+      userAction: this.userAction
     };
 
     return data;
@@ -69,14 +74,20 @@ class Users {
   async insertUsers() {
     if (this.isValid()) {
       let query = {
-        text: "select insert_users($1, $2, $3, $4, $5, $6)",
+        text: "select insert_users($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
         values: [
+          this.tenantId,
           this.username,
           this.firstName,
           this.lastName,
           this.email,
           this.employeeId,
+          this.contact,
+          this.positionId,
+          this.positionName,
+          this.vip,
           this.password,
+          this.userAction
         ],
       };
 
