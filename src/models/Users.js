@@ -195,7 +195,7 @@ class Users {
     let whereClaues = (q !== undefined && q !== "") ? "where username ilike $3 or employee_id ilike $3 or u.user_id::text ilike $3" : '';
 
     let query = {
-      text: `select user_id, username, first_name, last_name, email, employee_id from users u ${whereClaues} order by user_id limit $1 offset $2`,
+      text: `select user_id, tenant_id, username, first_name, last_name, email, employee_id from users u ${whereClaues} order by user_id limit $1 offset $2`,
       values: (whereClaues != '') ? [page, size, `%${q}%`] : [page, size],
     };
 

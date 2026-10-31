@@ -18,6 +18,7 @@ const getListUser = async (req, res) => {
                 const dataList = data.data.map((item) => {
                     return {
                         userId: item.user_id,
+                        tenantId: item.tenant_id,
                         username: item.username,
                         employeeId: item.employee_id,
                     }
