@@ -8,7 +8,12 @@ class Users {
     firstName,
     lastName,
     email,
-    employeeId
+    employeeId,
+    contact,
+    positionId,
+    positionName,
+    vip,
+    isActive
   ) {
     this.username = username;
     this.password = password;
@@ -17,6 +22,11 @@ class Users {
     this.lastName = lastName;
     this.email = email;
     this.employeeId = employeeId;
+    this.contact = contact;
+    this.positionId = positionId;
+    this.positionName = positionName;
+    this.vip = vip;
+    this.isActive = isActive;
   }
 
   getObject() {
@@ -28,6 +38,11 @@ class Users {
       lastName: this.lastName,
       email: this.email,
       employeeId: this.employeeId,
+      contact: this.contact,
+      positionId: this.positionId,
+      positionName: this.positionName,
+      vip: this.vip,
+      isActive: this.isActive,
     };
 
     return data;
@@ -94,7 +109,7 @@ class Users {
 
   async getDataByUsername(username) {
     let query = {
-      text: "select user_id, username, first_name, last_name, email, employee_id, password from users where username = $1 fetch first 1 rows only",
+      text: "select tenant_id, user_id, username, first_name, last_name, email, employee_id from users where username = $1 fetch first 1 rows only",
       values: [username],
     };
 
@@ -110,8 +125,32 @@ class Users {
 
   async getDataByUserId(userId) {
     let query = {
-      text: "select user_id, username, first_name, last_name, email, employee_id, password from users where user_id = $1 fetch first 1 rows only",
+      text: "select user_id, username, first_name, last_name, email, employee_id from users where user_id = $1 fetch first 1 rows only",
       values: [userId],
+    };
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ? true : responseDB.is_success,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
+  }
+
+  async getCredDataByUsernameTenant(tenantId, username) {
+    let query = {
+      text: `select
+              tenant_id,
+              username,
+              password,
+              isActive
+            from
+              users_cred uc 
+            where
+              tenant_id = $1 and username = $2`,
+      values: [tenantId, username],
     };
 
     const responseDB = await callDatabase(query);
