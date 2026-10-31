@@ -134,6 +134,22 @@ class Users {
     };
   }
 
+  async getDataByUsernameTenant(username, tenant) {
+    let query = {
+      text: "select tenant_id, user_id, username, first_name, last_name, email, employee_id from users where username = $1 and tenant_id = $2 fetch first 1 rows only",
+      values: [username, tenant],
+    };
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ? true : responseDB.is_success,
+      message: responseDB.message ? responseDB.message : null,
+      rowCount: responseDB.rowCount,
+      data: responseDB.data,
+    };
+  }
+
   async getDataByUserId(userId) {
     let query = {
       text: "select user_id, username, first_name, last_name, email, employee_id from users where user_id = $1 fetch first 1 rows only",

@@ -29,7 +29,10 @@ const createJWT = (data) => {
 
 const createRefreshToken = (data) => {
     const token = jwt.sign(
-        {user_id: data.user_id},
+        {
+            tenant_id: data.tenant_id,
+            user_id: data.user_id
+        },
         `${data.user_id}&`,
         {
             expiresIn: '7d'
