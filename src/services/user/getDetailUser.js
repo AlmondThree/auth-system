@@ -9,19 +9,26 @@ const getDetailUsers = async (req, res) => {
     
     try {
         const userId = req.params.id;
+        const tenantId = req.headers['x-tenant-id'];
 
         if(userId !== undefined && userId != '') {
-            const data = await user.getUserDetails(userId);
+            const data = await user.getUserDetails(userId,tenantId);
             if(data.status) {
                 if(data.rowCount > 0) {
                     const dataList = data.data.map((item) => {
                         return {
                             id: item.user_id,
+                            tenantId: item.tenant_id,
                             username: item.username,
                             firstName: item.first_name,
                             lastName: item.last_name,
                             email: item.email,
                             employeeId: item.employee_id,
+                            contact: item.contact,
+                            positionId: item.position_id,
+                            positionName: item.position_name,
+                            isVip: item.vip,
+                            isActive: item.isactive,
                             roles: (item.roles) ? item.roles.split("~") : [],
                         }
                     })

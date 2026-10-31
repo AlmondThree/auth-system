@@ -243,26 +243,32 @@ class Users {
     };
   }
 
-  async getUserDetails(userId) {
+  async getUserDetails(userId, tenantId) {
 
     if(userId !== undefined && userId != '') {
         let query = {
         text: `
           select 
+			      u.tenant_id,
             u.user_id,
             u.username,
             u.first_name,
             u.last_name, 
             u.email, 
             u.employee_id,
+            u.contact,
+            u.position_id,
+            u.position_name,
+            u.vip,
+            u.isactive,
             string_agg(ur.role_name, '~') as roles
           from users u
           left join role_mapping rm on u.user_id = rm.user_id and rm.is_active = true
           left join user_role ur on rm.id_role = ur.id_role 
-          where u.user_id = $1
+          where u.user_id = $1 and u.tenant_id = $2
           group by u.user_id 
         `,
-        values: [userId]
+        values: [userId, tenantId]
       }
 
       const responseDB = await callDatabase(query);
