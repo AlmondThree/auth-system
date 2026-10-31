@@ -23,14 +23,17 @@ const loginUser = async (req, res) => {
   );
 
   if (statusReqBody) {
+    let tenantIdReq = req.body.tenantId;
     let usernameReq = req.body.username;
     let passwordReq = req.body.password;
     const usersImpl = new Users();
 
-    let dataUser = await usersImpl.getDataByUsername(usernameReq);
+    let dataCred = await usersImpl.getCredDataByUsernameTenant(tenantIdReq, usernameReq);
 
-    if (dataUser.rowCount > 0) {
-      let storedPassword = dataUser.data[0]["password"];
+    if (dataCred.rowCount > 0) {
+      let dataUser = await usersImpl.getDataByUsername(usernameReq);
+
+      let storedPassword = dataCred.data[0]["password"];
 
       statusRequest = await bcrypt.compare(passwordReq, storedPassword);
 
