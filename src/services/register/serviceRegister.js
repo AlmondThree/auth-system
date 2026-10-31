@@ -16,13 +16,20 @@ async function serviceRegister(req, res) {
 
     const usersImpl = new Users();
     usersImpl.createObject(
+      reqBody["tenant_id"],
       reqBody["username"],
       resultPassword,
       reqBody["roles"],
       reqBody["first_name"],
       reqBody["last_name"],
       reqBody["email"],
-      reqBody["employee_id"]
+      reqBody["employee_id"],
+      reqBody["contact"],
+      reqBody["position_id"],
+      reqBody["position_name"],
+      reqBody["vip"],
+      true,
+      reqBody["userAction"]
     );
 
     const insertUser = await usersImpl.insertUsers();
