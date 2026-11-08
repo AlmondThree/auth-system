@@ -360,6 +360,36 @@ class Users {
     };
   }
 
+async addRoles(roleName, description, isGeneral, servicesId, isActive, userAction) {
+
+    let query = {
+      text: `
+        insert into user_role
+        values (
+          gen_random_uuid(),
+          $1,
+          $2,
+          $3,
+          $4,
+          $5,
+          CURRENT_TIMESTAMP,
+          $6,
+          null,
+          null
+        );
+      `,
+      values: [roleName, description, isGeneral, servicesId, isActive, userAction],
+    };
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ?  true : responseDB.is_success,
+      message: responseDB.message ? responseDB.message : null,
+      data: responseDB.data,
+    };
+  }
+
   async assign_roles(userId, roleId) {
     let query = {
       text: `select assign_roles ($1, $2);`,
