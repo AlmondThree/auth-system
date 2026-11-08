@@ -24,6 +24,7 @@ const { getListCredentialsTenantServices } = require('../../services/credentials
 const { getCredentialsTenantServices } = require('../../services/credentialsTenant/getCredentialsTenant');
 const { updateCredentialsTenantServices } = require('../../services/credentialsTenant/updateCredentialsTenant');
 const { pushCredentialsTenantServices } = require('../../services/credentialsTenant/pushCredentialsTenant');
+const { addRoles } = require('../../services/roles/serviceAddRoles');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -176,6 +177,11 @@ router.route('/roles').all(async (req, res, next) => {
     switch (req.method) {
         case "GET":
             await getListRoles(req, res)
+            next()       
+            break;
+
+        case "POST":
+            await addRoles(req, res)
             next()       
             break;
     
