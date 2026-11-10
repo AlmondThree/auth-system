@@ -360,7 +360,7 @@ class Users {
     };
   }
 
-async addRoles(roleName, description, isGeneral, servicesId, isActive, userAction) {
+  async addRoles(roleName, description, isGeneral, servicesId, isActive, userAction) {
 
     let query = {
       text: `
@@ -379,6 +379,31 @@ async addRoles(roleName, description, isGeneral, servicesId, isActive, userActio
         );
       `,
       values: [roleName, description, isGeneral, servicesId, isActive, userAction],
+    };
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ?  true : responseDB.is_success,
+      message: responseDB.message ? responseDB.message : null,
+      data: responseDB.data,
+    };
+  }
+
+  async updateRole(roleId, description, isGeneral, servicesId, isActive, userAction) {
+
+    let query = {
+      text: `
+        update public.user_role set
+          description = coalesce($2, description),
+          isgeneral = coalesce($3, isgeneral),
+          services_id = coalesce($4, services_id),
+          isactive = coalesce($5, isactive),
+          updated = current_timestamp,
+          updated_by = coalesce($6, updated_by)
+        where id_role = $1
+      `,
+      values: [roleId, description, isGeneral, servicesId, isActive, userAction],
     };
 
     const responseDB = await callDatabase(query);
