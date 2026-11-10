@@ -25,6 +25,7 @@ const { getCredentialsTenantServices } = require('../../services/credentialsTena
 const { updateCredentialsTenantServices } = require('../../services/credentialsTenant/updateCredentialsTenant');
 const { pushCredentialsTenantServices } = require('../../services/credentialsTenant/pushCredentialsTenant');
 const { addRoles } = require('../../services/roles/serviceAddRoles');
+const { updateRoles } = require('../../services/roles/serviceUpdateRoles');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -182,6 +183,24 @@ router.route('/roles').all(async (req, res, next) => {
 
         case "POST":
             await addRoles(req, res)
+            next()       
+            break;
+    
+        default:
+            const serviceObj = new Services()
+            res.locals = serviceObj.createNextAttribute(405, {
+                status: "error",
+                message: "Invalid http methods!",
+            }, null, "Invalid http methods")
+            next()
+            break;
+    }
+})
+
+router.route('/roles/:id').all(async (req, res, next) => {
+    switch (req.method) {
+        case "PUT":
+            await updateRoles(req, res)
             next()       
             break;
     
