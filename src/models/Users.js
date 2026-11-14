@@ -536,6 +536,61 @@ class Users {
 
   }
 
+  async addScope(scopeName, description, isGeneral, servicesId, isActive, userAction) {
+
+    let query = {
+      text: `
+        insert into user_scope
+        values (
+          gen_random_uuid(),
+          $1,
+          $2,
+          $3,
+          $4,
+          $5,
+          CURRENT_TIMESTAMP,
+          $6,
+          null,
+          null
+        );
+      `,
+      values: [scopeName, description, isGeneral, servicesId, isActive, userAction],
+    };
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ?  true : responseDB.is_success,
+      message: responseDB.message ? responseDB.message : null,
+      data: responseDB.data,
+    };
+  }
+
+  async updateScope(scopeId, description, isGeneral, servicesId, isActive, userAction) {
+
+    let query = {
+      text: `
+        update public.user_scope set
+          description = coalesce($2, description),
+          isgeneral = coalesce($3, isgeneral),
+          services_id = coalesce($4, services_id),
+          isactive = coalesce($5, isactive),
+          updated = current_timestamp,
+          updated_by = coalesce($6, updated_by)
+        where id_scope = $1
+      `,
+      values: [scopeId, description, isGeneral, servicesId, isActive, userAction],
+    };
+
+    const responseDB = await callDatabase(query);
+
+    return {
+      status: responseDB.is_success ?  true : responseDB.is_success,
+      message: responseDB.message ? responseDB.message : null,
+      data: responseDB.data,
+    };
+  }
+
   async assign_scope(roleId, scopeId) {
     let query = {
       text: `select assign_scope ($1, $2);`,
