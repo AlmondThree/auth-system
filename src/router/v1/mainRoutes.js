@@ -27,6 +27,7 @@ const { pushCredentialsTenantServices } = require('../../services/credentialsTen
 const { addRoles } = require('../../services/roles/serviceAddRoles');
 const { updateRoles } = require('../../services/roles/serviceUpdateRoles');
 const { addScope } = require('../../services/scope/serviceAddScope');
+const { updateScope } = require('../../services/scope/serviceUpdateScope');
 
 router.route('/*').all(async (req, res, next) => {
     const serviceObj = new Services()
@@ -261,6 +262,11 @@ router.route('/scope/:id').all(async (req, res, next) => {
     switch (req.method) {
         case "GET":
             await getDetailScope(req, res)
+            next()       
+            break;
+        
+        case "PUT":
+            await updateScope(req, res)
             next()       
             break;
     
